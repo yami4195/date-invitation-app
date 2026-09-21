@@ -1,14 +1,20 @@
 import { createClient } from '@supabase/supabase-js';
 
-const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
-const supabaseKey =
+const rawUrl = import.meta.env.VITE_SUPABASE_URL;
+const rawKey =
   import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY ||
   import.meta.env.VITE_SUPABASE_ANON_KEY;
 
-if (!supabaseUrl || !supabaseKey) {
+export const isSupabaseConfigured = Boolean(rawUrl && rawKey);
+
+// Fallback to prevent createClient from throwing on module initialization
+const supabaseUrl = rawUrl || 'https://placeholder.supabase.co';
+const supabaseKey = rawKey || 'placeholder-anon-key';
+
+if (!isSupabaseConfigured) {
   console.warn(
-    'Supabase URL or Key missing in environment. Please check your .env.local file.'
+    'Supabase environment variables (VITE_SUPABASE_URL / VITE_SUPABASE_PUBLISHABLE_KEY) are missing in production. Please add them in your Vercel Dashboard.'
   );
 }
 
-export const supabase = createClient(supabaseUrl || '', supabaseKey || '');
+export const supabase = createClient(supabaseUrl, supabaseKey);

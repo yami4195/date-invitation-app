@@ -1,0 +1,14 @@
+version: '3.8'
+
+services:
+  romantic-date-app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        VITE_SUPABASE_URL: ${VITE_SUPABASE_URL:-https://zyzutgbofjfbgjlgatni.supabase.co}
+        VITE_SUPABASE_PUBLISHABLE_KEY: ${VITE_SUPABASE_PUBLISHABLE_KEY:-sb_publishable_qXGOYuhqwn7nBqx6bF_KQw_K9cNCo09}
+    container_name: romantic-date-app
+    ports:
+      - "3000:80"
+    restart: unless-stopped
