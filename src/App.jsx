@@ -1,24 +1,33 @@
 import React, { useState } from 'react';
 import BackgroundParticles from './components/BackgroundParticles';
 import InvitationCard from './components/InvitationCard';
+import DatePlannerForm from './components/DatePlannerForm';
 import SuccessCelebration from './components/SuccessCelebration';
 
 export default function App() {
-  const [isAccepted, setIsAccepted] = useState(false);
+  // 'invitation' -> 'planning' -> 'confirmed'
+  const [currentStep, setCurrentStep] = useState('invitation');
   const [dodgeCount, setDodgeCount] = useState(0);
   const [soundEnabled, setSoundEnabled] = useState(true);
+  const [datePlan, setDatePlan] = useState(null);
 
   const handleAccept = () => {
-    setIsAccepted(true);
+    setCurrentStep('planning');
+  };
+
+  const handlePlanConfirmed = (plan) => {
+    setDatePlan(plan);
+    setCurrentStep('confirmed');
   };
 
   const handleReset = () => {
-    setIsAccepted(false);
+    setCurrentStep('invitation');
     setDodgeCount(0);
+    setDatePlan(null);
   };
 
   const toggleSound = () => {
-    setSoundEnabled(prev => !prev);
+    setSoundEnabled((prev) => !prev);
   };
 
   return (
@@ -35,21 +44,31 @@ export default function App() {
         type="button"
         className="sound-toggle-btn"
         onClick={toggleSound}
-        aria-label={soundEnabled ? "Mute sound effects" : "Enable sound effects"}
+        aria-label={soundEnabled ? 'Mute sound effects' : 'Enable sound effects'}
       >
         <span>{soundEnabled ? '🔊 Sound: ON' : '🔇 Sound: OFF'}</span>
       </button>
 
-      {/* Dynamic Views: Question vs Success Celebration */}
-      {!isAccepted ? (
+      {/* Multi-Step Flow: Invitation -> Date Planning -> Celebration */}
+      {currentStep === 'invitation' && (
         <InvitationCard
           onAccept={handleAccept}
           dodgeCount={dodgeCount}
           setDodgeCount={setDodgeCount}
           soundEnabled={soundEnabled}
         />
-      ) : (
+      )}
+
+      {currentStep === 'planning' && (
+        <DatePlannerForm
+          onConfirm={handlePlanConfirmed}
+          soundEnabled={soundEnabled}
+        />
+      )}
+
+      {currentStep === 'confirmed' && (
         <SuccessCelebration
+          datePlan={datePlan}
           onReset={handleReset}
           soundEnabled={soundEnabled}
           dodgeCount={dodgeCount}

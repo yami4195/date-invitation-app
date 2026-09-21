@@ -6,8 +6,8 @@
   --pale-pink: #fff0f3;
   --romantic-purple: #8338ec;
   --gold-accent: #ffb703;
-  --card-bg: rgba(255, 255, 255, 0.78);
-  --card-border: rgba(255, 255, 255, 0.9);
+  --card-bg: rgba(255, 255, 255, 0.82);
+  --card-border: rgba(255, 255, 255, 0.92);
   --card-shadow: 0 20px 50px rgba(255, 77, 109, 0.2), 0 10px 20px rgba(0, 0, 0, 0.05);
   --text-main: #2b1020;
   --text-muted: #794d61;
@@ -22,10 +22,10 @@
 
 html, body {
   width: 100%;
-  height: 100%;
   min-height: 100vh;
   min-height: -webkit-fill-available;
-  overflow: hidden;
+  overflow-x: hidden;
+  overflow-y: auto;
   font-family: 'Outfit', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
   color: var(--text-main);
   background: linear-gradient(135deg, #ffeef2 0%, #ffd6e0 35%, #ffb3c6 70%, #ff8fa3 100%);
@@ -36,17 +36,17 @@ html, body {
 
 #root {
   width: 100%;
-  height: 100%;
+  min-height: 100vh;
   display: flex;
   align-items: center;
   justify-content: center;
   position: relative;
-  overflow: hidden;
+  overflow-x: hidden;
 }
 
 /* Background Animated Gradient Glows */
 .bg-ambient-blob-1 {
-  position: absolute;
+  position: fixed;
   top: -10vw;
   left: -10vw;
   width: 50vw;
@@ -60,7 +60,7 @@ html, body {
 }
 
 .bg-ambient-blob-2 {
-  position: absolute;
+  position: fixed;
   bottom: -15vw;
   right: -10vw;
   width: 60vw;
@@ -84,7 +84,7 @@ html, body {
 
 /* Floating Particle Canvas/Layer */
 .particles-canvas {
-  position: absolute;
+  position: fixed;
   top: 0;
   left: 0;
   width: 100%;
@@ -96,11 +96,11 @@ html, body {
 /* Main Container */
 .app-container {
   width: 100%;
-  height: 100%;
+  min-height: 100vh;
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 1.25rem;
+  padding: 3.5rem 1.25rem 2.5rem 1.25rem;
   position: relative;
   z-index: 10;
 }
@@ -152,6 +152,11 @@ html, body {
   transition: transform 0.3s ease;
 }
 
+.planner-card {
+  max-width: 530px;
+  padding: 2.5rem 2.25rem;
+}
+
 @keyframes cardEntrance {
   0% {
     opacity: 0;
@@ -165,7 +170,7 @@ html, body {
 
 /* Card Visual / Illustration */
 .card-visual-wrapper {
-  margin-bottom: 1.5rem;
+  margin-bottom: 1.25rem;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -173,7 +178,7 @@ html, body {
 }
 
 .pulsing-heart-icon {
-  font-size: 4.5rem;
+  font-size: 4.25rem;
   filter: drop-shadow(0 8px 18px rgba(255, 77, 109, 0.35));
   animation: heartPulse 1.8s ease-in-out infinite;
   display: inline-block;
@@ -226,7 +231,7 @@ html, body {
   font-weight: 800;
   line-height: 1.25;
   color: #240014;
-  margin-bottom: 0.75rem;
+  margin-bottom: 0.6rem;
   letter-spacing: -0.02em;
   text-shadow: 0 2px 4px rgba(0, 0, 0, 0.04);
 }
@@ -236,7 +241,7 @@ html, body {
   font-size: 1.15rem;
   font-weight: 600;
   color: var(--text-muted);
-  margin-bottom: 2.25rem;
+  margin-bottom: 2rem;
 }
 
 .dodge-counter-badge {
@@ -291,13 +296,48 @@ html, body {
   white-space: nowrap;
 }
 
-.btn-primary-yes:hover {
+.btn-primary-yes:hover:not(.disabled) {
   transform: scale(1.06) translateY(-2px);
   box-shadow: 0 14px 30px rgba(255, 0, 84, 0.5), inset 0 2px 2px rgba(255, 255, 255, 0.6);
 }
 
-.btn-primary-yes:active {
+.btn-primary-yes:active:not(.disabled) {
   transform: scale(0.98) translateY(1px);
+}
+
+.btn-primary-yes.disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+  filter: grayscale(0.2);
+  box-shadow: none;
+}
+
+.btn-confirm {
+  width: 100%;
+  font-size: 1.2rem;
+  padding: 1rem 2rem;
+  margin-top: 1rem;
+}
+
+/* Loading Spinner on Button */
+.loading-spinner-wrapper {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+.spinner-dot {
+  width: 18px;
+  height: 18px;
+  border: 2.5px solid rgba(255, 255, 255, 0.35);
+  border-top-color: #ffffff;
+  border-radius: 50%;
+  animation: spin 0.7s linear infinite;
+  display: inline-block;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
 }
 
 /* Runaway & Floating NO Button */
@@ -352,16 +392,121 @@ html, body {
   color: var(--primary-rose);
 }
 
-/* Success Celebration View */
+/* =========================================
+   Date Planner Form Styles
+   ========================================= */
+.planner-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  text-align: left;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.55rem;
+}
+
+.form-label {
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--text-main);
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.form-input {
+  width: 100%;
+  padding: 0.85rem 1.15rem;
+  font-family: inherit;
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--text-main);
+  background: rgba(255, 255, 255, 0.9);
+  border: 1.5px solid rgba(255, 77, 109, 0.25);
+  border-radius: 14px;
+  outline: none;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+  transition: all 0.25s ease;
+}
+
+.form-input:focus {
+  border-color: var(--primary-pink);
+  background: #ffffff;
+  box-shadow: 0 0 0 4px rgba(255, 77, 109, 0.18);
+}
+
+.form-input.custom-input {
+  margin-top: 0.5rem;
+  animation: popBadge 0.25s ease;
+}
+
+/* Choice Pills (Tags) */
+.choice-pills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.choice-pill {
+  background: rgba(255, 255, 255, 0.88);
+  border: 1.5px solid rgba(255, 77, 109, 0.2);
+  padding: 0.5rem 0.95rem;
+  border-radius: 9999px;
+  font-family: inherit;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--text-main);
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.03);
+}
+
+.choice-pill:hover {
+  transform: translateY(-2px);
+  border-color: var(--primary-pink);
+  background: #ffffff;
+  box-shadow: 0 4px 12px rgba(255, 77, 109, 0.15);
+}
+
+.choice-pill.active {
+  background: linear-gradient(135deg, #ff4d6d 0%, #ff0054 100%);
+  color: #ffffff;
+  border-color: transparent;
+  transform: translateY(-2px) scale(1.03);
+  box-shadow: 0 6px 16px rgba(255, 77, 109, 0.35);
+}
+
+/* Error Banner */
+.form-error-banner {
+  background: rgba(255, 77, 109, 0.12);
+  border: 1.5px solid rgba(255, 77, 109, 0.4);
+  color: var(--primary-rose);
+  padding: 0.75rem 1rem;
+  border-radius: 14px;
+  font-size: 0.92rem;
+  font-weight: 600;
+  margin-bottom: 1.25rem;
+  animation: popBadge 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* =========================================
+   Success Celebration View & Summary Styles
+   ========================================= */
 .celebration-card {
   width: 100%;
-  max-width: 520px;
+  max-width: 530px;
   background: var(--card-bg);
   backdrop-filter: blur(25px);
   -webkit-backdrop-filter: blur(25px);
   border: 2px solid rgba(255, 255, 255, 0.95);
   border-radius: 32px;
-  padding: 3rem 2.5rem;
+  padding: 3rem 2.25rem;
   box-shadow: 0 25px 60px rgba(255, 77, 109, 0.25);
   text-align: center;
   position: relative;
@@ -380,8 +525,8 @@ html, body {
 }
 
 .celebration-visual {
-  font-size: 5rem;
-  margin-bottom: 1.25rem;
+  font-size: 4.8rem;
+  margin-bottom: 1rem;
   display: inline-block;
   animation: happyBounce 1s infinite alternate cubic-bezier(0.445, 0.05, 0.55, 0.95);
 }
@@ -392,72 +537,96 @@ html, body {
 }
 
 .celebration-title {
-  font-size: 2.5rem;
+  font-size: 2.4rem;
   font-weight: 800;
   color: var(--primary-rose);
-  margin-bottom: 0.5rem;
+  margin-bottom: 0.35rem;
   line-height: 1.2;
 }
 
 .celebration-subtitle {
-  font-size: 1.35rem;
+  font-size: 1.25rem;
   font-weight: 600;
-  color: var(--text-main);
-  margin-bottom: 0.5rem;
+  color: var(--text-muted);
+  margin-bottom: 1.5rem;
 }
 
-.celebration-note {
-  font-family: 'Caveat', cursive;
-  font-size: 1.65rem;
-  color: var(--romantic-purple);
-  margin-bottom: 2rem;
-  font-weight: 700;
-}
-
-/* Interactive Date Ideas Mini Selector */
-.date-ideas-box {
-  background: rgba(255, 255, 255, 0.65);
+/* Date Summary Box (2x2 Grid) */
+.date-summary-box {
+  background: rgba(255, 255, 255, 0.72);
+  border: 1.5px solid rgba(255, 77, 109, 0.3);
   border-radius: 20px;
-  padding: 1.25rem;
-  margin-bottom: 2rem;
-  border: 1px dashed rgba(255, 77, 109, 0.4);
+  padding: 1.5rem 1.25rem;
+  margin-bottom: 1.5rem;
+  box-shadow: 0 8px 24px rgba(255, 77, 109, 0.1);
+  text-align: left;
 }
 
-.date-ideas-label {
-  font-size: 0.9rem;
-  font-weight: 700;
+.date-summary-header {
+  font-size: 0.95rem;
+  font-weight: 800;
   text-transform: uppercase;
   letter-spacing: 0.05em;
-  color: var(--text-muted);
-  margin-bottom: 0.75rem;
+  color: var(--primary-rose);
+  margin-bottom: 1rem;
+  text-align: center;
 }
 
-.date-tags {
+.date-summary-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+}
+
+.summary-item {
   display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  gap: 0.6rem;
+  align-items: flex-start;
+  gap: 0.65rem;
+  background: rgba(255, 255, 255, 0.85);
+  padding: 0.75rem 0.85rem;
+  border-radius: 14px;
+  border: 1px solid rgba(255, 77, 109, 0.15);
 }
 
-.date-tag {
-  background: #ffffff;
-  border: 1px solid rgba(255, 77, 109, 0.2);
-  padding: 0.45rem 0.9rem;
-  border-radius: 9999px;
+.summary-icon {
+  font-size: 1.4rem;
+  line-height: 1;
+}
+
+.summary-content {
+  display: flex;
+  flex-direction: column;
+}
+
+.summary-label {
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  letter-spacing: 0.04em;
+}
+
+.summary-value {
+  font-size: 0.98rem;
+  font-weight: 700;
+  color: var(--text-main);
+  margin-top: 0.15rem;
+  word-break: break-word;
+}
+
+.celebration-romantic-message {
+  font-family: 'Caveat', cursive;
+  font-size: 2rem;
+  color: var(--primary-rose);
+  margin-bottom: 0.5rem;
+  font-weight: 700;
+}
+
+.celebration-dodge-note {
   font-size: 0.9rem;
   font-weight: 600;
-  color: var(--text-main);
-  cursor: pointer;
-  transition: all 0.2s ease;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.03);
-}
-
-.date-tag:hover, .date-tag.selected {
-  background: var(--primary-pink);
-  color: #fff;
-  border-color: var(--primary-pink);
-  transform: translateY(-2px) scale(1.03);
-  box-shadow: 0 4px 12px rgba(255, 77, 109, 0.3);
+  color: var(--text-muted);
+  margin-bottom: 1.75rem;
 }
 
 /* Celebration CTA Button */
@@ -465,9 +634,9 @@ html, body {
   background: linear-gradient(135deg, #ff4d6d 0%, #ff0054 100%);
   color: #ffffff;
   border: none;
-  font-size: 1.3rem;
+  font-size: 1.25rem;
   font-weight: 700;
-  padding: 1rem 2.75rem;
+  padding: 0.95rem 2.75rem;
   border-radius: 9999px;
   cursor: pointer;
   box-shadow: 0 10px 30px rgba(255, 0, 84, 0.4);
@@ -500,8 +669,8 @@ html, body {
 
 /* Media Queries for Mobile Responsiveness */
 @media (max-width: 480px) {
-  .romantic-card, .celebration-card {
-    padding: 2.25rem 1.5rem;
+  .romantic-card, .celebration-card, .planner-card {
+    padding: 2.25rem 1.4rem;
     border-radius: 24px;
   }
 
@@ -511,23 +680,28 @@ html, body {
 
   .card-subtitle {
     font-size: 1.05rem;
-    margin-bottom: 1.75rem;
+    margin-bottom: 1.5rem;
   }
 
   .celebration-title {
-    font-size: 2.1rem;
+    font-size: 2rem;
   }
 
   .celebration-subtitle {
-    font-size: 1.15rem;
+    font-size: 1.1rem;
   }
 
-  .celebration-note {
-    font-size: 1.45rem;
+  .celebration-romantic-message {
+    font-size: 1.7rem;
+  }
+
+  .date-summary-grid {
+    grid-template-columns: 1fr;
+    gap: 0.65rem;
   }
 
   .pulsing-heart-icon {
-    font-size: 3.75rem;
+    font-size: 3.5rem;
   }
 
   .actions-container {
